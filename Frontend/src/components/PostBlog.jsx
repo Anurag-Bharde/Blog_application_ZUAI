@@ -1,7 +1,6 @@
 import { useState } from "react"
 import axios from "axios";
 
-
 export function PostBlog(post,setPost){
 
     const [title,setTitle]=useState("")
