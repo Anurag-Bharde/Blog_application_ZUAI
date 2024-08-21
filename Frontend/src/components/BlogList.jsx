@@ -1,0 +1,8 @@
+
+export function BlogList(){
+    return(
+        <>
+            {}
+        </>
+    )
+}

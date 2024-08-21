@@ -1,15 +1,30 @@
 import { useState } from "react"
+import axios from "axios";
 
 
-
-export function PostBlog(){
+export function PostBlog(post,setPost){
 
     const [title,setTitle]=useState("")
     const [blog,setBlog]=useState("");
 
 
    async function addBlog(){
-     const response=await 
+     try{const response=await axios.post("http://localhost:3000/posts",{
+        Title:title,
+        Post:blog
+     },{
+        headers:{
+            "Content-Type":"application/json"
+        }
+     })
+     setPost([response.data, ...post])
+     setBlog("");
+     setTitle("");
+     }
+     catch(error){
+        console.log(error);
+
+     }
     }
 
 
