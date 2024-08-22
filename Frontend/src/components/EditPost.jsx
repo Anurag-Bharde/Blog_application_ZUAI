@@ -1,12 +1,16 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom"
+import Modal from "./Modal";
 
-export default function EditPost({setShowForm}){
+export default function EditPost({fetchPosts}){
     const {id}=useParams();
     const [title,setTitle]=useState("")
     const [blog,setBlog]=useState("")
     // const [title,setTitle]=useState("")
+
+    const [showModal,setShowModal]=useState(false);
+    const [postToEdit,setPostToEdit]=useState(null);
 
     const navigate=useNavigate();
    
@@ -36,20 +40,34 @@ export default function EditPost({setShowForm}){
             }
          }
         )
-        setShowForm(true);
+        await fetchPosts()
         navigate('/')
+
     }catch(error){
         console.error(error)
     }
        }
-  
-console.log(title , blog)
+
+       function handleEditClick(){
+          setShowModal(true)
+       }
 
     return(
         <>
+        <div>
         <input type="text" value={title} placeholder="Title" onChange={(e)=>setTitle(e.target.value)}></input>
         <textarea type="text" value={blog} placeholder="Blog content" onChange={(e)=>setBlog(e.target.value)}></textarea>
-        <button onClick={editPosted}>Edit The Post</button>
+        <button onClick={handleEditClick}>Edit The Post</button>
+        </div>
+        {showModal && (
+            <Modal
+            OnClose={()=> setShowModal(false)}
+            OnConfirm={()=> editPosted()}
+            >
+                <h2>Edit the Blog</h2>
+                <h6>The deleted blog will not be shown again</h6>
+            </Modal>
+        )}
         </>
     )
 }
