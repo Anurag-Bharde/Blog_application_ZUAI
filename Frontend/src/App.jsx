@@ -44,13 +44,13 @@ useEffect(() => {
 }, [])
 
   return (
+    <div className='bg-[#e5ecf3]'>
     <>
-    
     <BrowserRouter>
     <AppBar post={post} setPost={setPost} fetchPosts={fetchPosts} />
     </BrowserRouter>
-      
     </>
+    </div>
   )
 }
 
@@ -58,6 +58,7 @@ function AppBar({post,setPost,fetchPosts}){
 
   return (
     <>
+    <div >
     <Routes>
     <Route path='/' element={<Home />} />
         <Route path='/Signin' element={<Signin />} />
@@ -67,6 +68,7 @@ function AppBar({post,setPost,fetchPosts}){
         <Route path='/edit/:id' element={<AuthCheck><Suspense fallback={"loading..."}><EditPost post={post} fetchPosts={fetchPosts} /></Suspense> </AuthCheck>} />
          
       </Routes>
+      </div>
     </>
   )
 }

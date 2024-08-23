@@ -28,7 +28,7 @@ export function Signup() {
             setprofession(e.target.value);
         }} type="profession" placeholder="profession" /><br></br>
         <button onClick={async () => {
-            await axios.post("http://localhost:3001/signup", {
+            await axios.post("http://localhost:3000/signup", {
                 username,
                 password,
                 firstName,

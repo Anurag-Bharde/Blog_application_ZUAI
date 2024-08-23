@@ -1,6 +1,6 @@
 const express = require("express");
-const cookieParser = require("cookie-parser");
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
 const path = require("path");
 const { UserSchema } = require("./db");

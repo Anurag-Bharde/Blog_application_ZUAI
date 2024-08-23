@@ -16,7 +16,12 @@ const BlogPost=new mongoose.Schema({
         minLength:3,
         trim:true
     },
-    TimePost:Date
+    TimePost:Date,
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'UserInfo', // Ensure this matches the model name exactly
+        required: true
+    }
 })
 
 const UserInfo=new mongoose.Schema({

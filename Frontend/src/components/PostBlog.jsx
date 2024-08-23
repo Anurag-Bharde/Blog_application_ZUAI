@@ -16,7 +16,8 @@ export default function PostBlog({setPost,post}){
      },{
         headers:{
             "Content-Type": "application/json"
-        }
+        },
+        withCredentials: true
      })
 
      setPost([response.data, ...post])
