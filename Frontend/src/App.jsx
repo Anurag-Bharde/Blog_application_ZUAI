@@ -5,6 +5,8 @@ const EditPost= lazy(()=> import("./components/EditPost"))
 import axios from 'axios'
 import { BlogList } from './components/BlogList'
 import {BrowserRouter, Route, Routes, useLocation, useNavigate} from 'react-router-dom'
+import Signin from './components/Signin'
+import Home from './components/Home'
 
 
 
@@ -55,14 +57,19 @@ const navigate=useNavigate();
 const location=useLocation();
   return (
     <>
-    {location.pathname !=='/PostBlog' && location.pathname !=='/edit/'  && (
-      <button className="border-4 border-black-700 m-5" onClick={()=>{
-      navigate("/PostBlog");
-     }}>Post a Blog</button>
-    )}
+    {location.pathname !== '/PostBlog' && !location.pathname.startsWith('/edit/') && (
+  <button className="border-4 border-black-700 m-5" onClick={() => {
+    navigate("/PostBlog");
+  }}>
+    Post a Blog
+  </button>
+)}
+
     <Routes>
+    <Route path='/' element={<Home />} />
+        <Route path='/Signin' element={<Signin />} />
         <Route path="/PostBlog" element={<Suspense fallback={"loading..."}><PostBlog post={post} setPost={setPost} /></Suspense>} />
-        <Route path='/' element={<BlogList post={post} fetchPosts={fetchPosts} />} />
+        <Route path='/BlogList' element={<BlogList post={post} fetchPosts={fetchPosts} />} />
         <Route path='/edit/:id' element={<Suspense fallback={"loading..."}><EditPost post={post} fetchPosts={fetchPosts} /></Suspense>} />
          
       </Routes>

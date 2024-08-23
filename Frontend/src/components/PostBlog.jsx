@@ -22,7 +22,7 @@ export default function PostBlog({setPost,post}){
      setPost([response.data, ...post])
      setBlog("");
      setTitle("");
-     navigate('/');
+     navigate('/BlogList');
      }
      catch(error){
         console.log(error);

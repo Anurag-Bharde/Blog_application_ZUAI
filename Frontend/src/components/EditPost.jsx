@@ -10,7 +10,6 @@ export default function EditPost({fetchPosts}){
     // const [title,setTitle]=useState("")
 
     const [showModal,setShowModal]=useState(false);
-    const [postToEdit,setPostToEdit]=useState(null);
 
     const navigate=useNavigate();
    
@@ -41,7 +40,7 @@ export default function EditPost({fetchPosts}){
          }
         )
         await fetchPosts()
-        navigate('/')
+        navigate('/BlogList')
 
     }catch(error){
         console.error(error)
