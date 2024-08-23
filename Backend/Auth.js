@@ -23,7 +23,7 @@ app.post("/signin",async (req, res) => {
   if(!USeRFINDER){
       return res.status(411).json({msg:"Enter the credentials correctly"})
    }
-
+   
   const token = jwt.sign({ password:password }, JWT_SECRET, { expiresIn: "1h" });
   res.cookie("token", token, { httpOnly: true, secure: true });
   return res.send("Logged in!" + token);
@@ -46,8 +46,8 @@ app.post("/signup",async(req,res)=>{
             lastName:lastName,
             profession:profession
         })
-
-        const token = jwt.sign({password:password}, JWT_SECRET, { expiresIn: 60*60 });
+      const userIDd=dbUser._id.toString()
+        const token = jwt.sign({id:userIDd}, JWT_SECRET, { expiresIn: 60*60 });
         res.cookie("token", token, { httpOnly: true, secure: true });
     }
     catch(error){
@@ -73,8 +73,8 @@ app.get("/user", (req, res) => {
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
     // Fetch user email or other details from the database using decoded.id
-    res.json({ userId: decoded.password });
-    console.log(decoded)
+    res.json({ userId: decoded.id });
+
   } catch (err) {
     return res.status(401).json({ message: "Unauthorized: Invalid token" });
   }

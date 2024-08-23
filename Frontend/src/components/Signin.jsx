@@ -28,7 +28,7 @@ function Signin() {
         }}>Submit</button>
 
         <p>If you dont have account please SignUp</p>
-        <button>Signup</button>
+        <button onClick={()=>navigate("/SignUp")}>SignUp</button>
     </div>
   )
 }

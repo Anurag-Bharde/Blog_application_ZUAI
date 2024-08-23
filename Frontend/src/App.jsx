@@ -7,6 +7,8 @@ import { BlogList } from './components/BlogList'
 import {BrowserRouter, Route, Routes, useLocation, useNavigate} from 'react-router-dom'
 import Signin from './components/Signin'
 import Home from './components/Home'
+import { Signup } from './components/Signup'
+import { AuthCheck } from './components/AuthCheck'
 
 
 
@@ -53,24 +55,16 @@ useEffect(() => {
 }
 
 function AppBar({post,setPost,fetchPosts}){
-const navigate=useNavigate();
-const location=useLocation();
+
   return (
     <>
-    {location.pathname !== '/PostBlog' && !location.pathname.startsWith('/edit/') && (
-  <button className="border-4 border-black-700 m-5" onClick={() => {
-    navigate("/PostBlog");
-  }}>
-    Post a Blog
-  </button>
-)}
-
     <Routes>
     <Route path='/' element={<Home />} />
         <Route path='/Signin' element={<Signin />} />
-        <Route path="/PostBlog" element={<Suspense fallback={"loading..."}><PostBlog post={post} setPost={setPost} /></Suspense>} />
-        <Route path='/BlogList' element={<BlogList post={post} fetchPosts={fetchPosts} />} />
-        <Route path='/edit/:id' element={<Suspense fallback={"loading..."}><EditPost post={post} fetchPosts={fetchPosts} /></Suspense>} />
+        <Route path='SignUp' element={<Signup/>}/>
+        <Route path="/PostBlog" element={<AuthCheck> <Suspense fallback={"loading..."}><PostBlog post={post} setPost={setPost} /></Suspense> </AuthCheck>} />
+        <Route path='/BlogList' element={<AuthCheck><BlogList post={post} fetchPosts={fetchPosts} /> </AuthCheck>} />
+        <Route path='/edit/:id' element={<AuthCheck><Suspense fallback={"loading..."}><EditPost post={post} fetchPosts={fetchPosts} /></Suspense> </AuthCheck>} />
          
       </Routes>
     </>

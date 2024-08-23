@@ -24,8 +24,17 @@ export function BlogList({ post, fetchPosts }) {
     setShowModal(true)
   }
 
+  async function LogoutFunc(){
+     await axios.post("http://localhost:3001/logout")
+     navigate("/Signin")
+  }
+
   return (
     <>
+    <button className="border-4 border-black-700 m-5" onClick={()=>navigate("/PostBlog")}>
+    Post a Blog</button>
+    <button onClick={()=> LogoutFunc()}>Logout</button>
+
       {post.map((list) => (
         <div className="border-2 border-black m-3" key={list._id}>
           <h4 className="ml-4 mt-1">{list.Title}</h4>
