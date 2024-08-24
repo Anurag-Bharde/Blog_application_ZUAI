@@ -2,12 +2,18 @@ import { formatDistance } from "date-fns"
 import axios from "axios"
 import { useNavigate } from "react-router-dom"
 import Modal from "./Modal"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 export function BlogList({ post, fetchPosts }) {
   const [showModal, setShowModal] = useState(false)
   const [postToDelete, setPostToDelete] = useState(null)
+  const [username,setUsername]=useState("")
+  
   const navigate = useNavigate()
+
+  useEffect(() => {
+    setUsernameFromPosts(post)
+  }, [post])
 
   async function deleter(id) {
     try {
@@ -29,70 +35,127 @@ export function BlogList({ post, fetchPosts }) {
      navigate("/Signin")
   }
 
+  function setUsernameFromPosts(posts) {
+    if (posts.length > 0 && posts[0].user && posts[0].user.username) {
+      setUsername(posts[0].user.username)
+    }
+  }
+  
   return (
-    <>
-    <div>
-    <button className="" onClick={()=> LogoutFunc()}>Logout</button>
-    </div>
-    <div className="flex justify-center">
-    <button className="border-4 pt-5 pl-20 pr-20 pb-5 border-indigo-500 rounded-full " onClick={()=>navigate("/PostBlog")}>
-    Post a Blog</button>
-</div>
- <div className="grid max-w-2xl grid-cols-1 pl-20 gap-x-8 gap-y-8 border-t border-gray-200 pt-10 sm:mt-16 sm:pt-16 lg:mx-0 lg:max-w-none lg:grid-cols-2">
-    {post.map((list) => (
-    <div className="flex max-w-xl flex-col items-start justify-between p-2 border border-gray-700 rounded-lg" key={list._id}>
-       <div className="grid">
-        <p className="text-gray-500">{formatDistance(new Date(), new Date(list.TimePost))} ago</p>
-        <div>
-        <button className="border-2" onClick={() => navigate(`/edit/${list._id}`)}>Edit this Blog</button>
-        <button className="border-2" onClick={() => handleDeleteClick(list._id)}>Delete</button>
+  <div className="bg-[#e5ecf3] min-h-screen flex">
+    {/* Side Navigation Bar */}
+    <div className="bg-white dark:bg-gray-800 w-16 p-12 flex flex-col justify-between items-center py-4 border-r border-gray-300 dark:border-gray-700 sticky top-0 h-screen">
+      {/* Logo at the top */}
+      <div className="flex flex-col items-center">
+        <img src="image.png" alt="Logo" className="w-10 h-10 mb-6" />
       </div>
-       </div>
-        <div className="group relative">
-                <h3 className="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-600">
-                  
-                    <span className="absolute inset-0" />
-                    {list.Title}
-    
-                </h3>
-                <p className="mt-5 line-clamp-3 text-sm leading-6 text-gray-600">{list.Post}</p>
-              </div>
-       
-       
-              <div className="relative mt-8 flex items-center gap-x-4">
-               
-                <div className="text-sm leading-6">
-                  <p className="font-semibold text-gray-900">
-                    
-                      <span className="absolute inset-0" />
-                      {list.user.firstName} {list.user.lastName}
-                  
-                  </p>
-                  <p className="text-gray-600">{list.user.profession}</p>
-                </div>
-              </div>
 
+      {/* Icon buttons at the bottom */}
+      <div className="flex flex-col items-center gap-6 mb-6">
+        <button className="p-2 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full">
+          <img src="/path-to-icon1.svg" alt="Icon 1" className="w-6 h-6" />
+        </button>
+        <button className="p-2 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full">
+          <img src="/path-to-icon2.svg" alt="Icon 2" className="w-6 h-6" />
+        </button>
+        <button className="p-2 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full">
+          <img src="/path-to-icon3.svg" alt="Icon 3" className="w-6 h-6" />
+        </button>
+        <button className="p-2 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full">
+          <img src="/path-to-icon4.svg" alt="Icon 4" className="w-6 h-6" />
+        </button>
+      </div>
+    </div>
 
+    {/* Main Content */}
+    <div className="flex-1 p-6">
+      {/* Navigation Bar */}
+      <nav className="bg-gray-100 p-4 rounded-full mb-2">
+  <div className="container mx-auto flex justify-between items-center">
+    <h4>Hello {username}</h4>
+    <button
+      className="rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+      onClick={() => LogoutFunc()}
+    >
+      Logout
+    </button>
+  </div>
+</nav>
 
-        {/* {list.user && (
-            <div>
-                <p>Author: {list.user.firstName} {list.user.lastName}</p>
-                <p>Profession: {list.user.profession}</p>
-            </div>
-        )} */}
-       </div>
-))}
-</div>
-
-      {showModal && (
-        <Modal 
-          OnClose={() => setShowModal(false)}
-          OnConfirm={() => deleter(postToDelete)}
+      {/* Post a Blog Button */}
+      <div className="flex justify-center mb-8">
+        <button
+          className="border-3 animate-badge-color-cycle px-16 py-4 rounded-full text-black font-serif text-xl font-medium hover:underline decoration-black-900"
+          onClick={() => navigate("/PostBlog")}
         >
-          <h2>Delete the Blog</h2>
-          <h6>The deleted blog will not be shown again</h6>
-        </Modal>
-      )}
-    </>
-  )
+          Post a Blog
+        </button>
+      </div>
+
+      {/* Blog Cards */}
+      <div className="grid max-w-2xl grid-cols-1 gap-x-5 gap-y-8 sm:mt-4 lg:mx-0 pl-12 lg:max-w-none lg:grid-cols-2">
+        {post.map((list) => (
+          
+          <div
+              className="flex max-w-xl flex-col items-start justify-between p-4 border border-gray-300 rounded-lg hover:scale-[1.02] hover:shadow-[0_10px_10px_rgba(0,0,0,.7)] transition-transform transition-shadow duration-500 ease-in-out"
+              key={list._id}
+          >
+            <div className="grid grid-cols-4 w-full">
+              <p className="text-gray-500 col-start-1 col-end-2">
+                {formatDistance(new Date(), new Date(list.TimePost))} ago
+              </p>
+              <div className="flex justify-end col-start-4 space-x-2">
+                <button
+                  className="border-2 border-slate-300 px-2 py-1 rounded-md hover:bg-gray-300"
+                  onClick={() => navigate(`/edit/${list._id}`)}
+                >
+                  Edit
+                </button>
+                <button
+                  className="border-2 border-slate-300 px-2 py-1 rounded-md hover:bg-gray-300"
+                  onClick={() => handleDeleteClick(list._id)}
+                  
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+
+            <article>
+              <h3 className="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-600">
+                {list.Title}
+              </h3>
+              <p className="mt-5 line-clamp-3 text-sm leading-6 text-gray-600">
+                {list.Post}
+              </p>
+            </article>
+
+            <div className="relative mt-8 flex items-center gap-x-4">
+              <div className="text-sm leading-6">
+                <p className="font-semibold text-gray-900">
+                  {list.user.firstName} {list.user.lastName}
+                 
+                </p>
+                <p className="text-gray-600">{list.user.profession}</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    {showModal && (
+      <Modal
+        OnClose={() => setShowModal(false)}
+        OnConfirm={() => deleter(postToDelete)}
+      >
+        <h2>Delete the Blog</h2>
+        <h6>The deleted blog will not be shown again</h6>
+      </Modal>
+    )}
+  </div>
+);
+
+  
+  
 }

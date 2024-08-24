@@ -44,7 +44,7 @@ useEffect(() => {
 }, [])
 
   return (
-    <div className='bg-[#e5ecf3]'>
+    <div >
     <>
     <BrowserRouter>
     <AppBar post={post} setPost={setPost} fetchPosts={fetchPosts} />

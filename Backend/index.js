@@ -106,7 +106,7 @@ app.get('/posts',async(req,res)=>{
     try{
         const blogs = await BlogPostSchema.find()
             .sort({ TimePost: -1 })
-            .populate('user', 'firstName lastName profession');
+            .populate('user', 'username firstName lastName profession');
         res.status(200).json(blogs);
     }
     catch(err){
