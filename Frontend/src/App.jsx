@@ -9,7 +9,7 @@ import Signin from './components/Signin'
 import Home from './components/Home'
 import { Signup } from './components/Signup'
 import { AuthCheck } from './components/AuthCheck'
-
+import { RecoilRoot } from 'recoil'
 
 
 function App() {
@@ -19,19 +19,6 @@ useEffect(() => {
   fetchPosts()
 }, [])
 
-// useEffect(()=>{
-//   async function fetchMyApi(){
-//       try{
-// const response=await axios.get("http://localhost:3000/posts")
-// setPost(response.data)
-
-//   }
-//   catch(error){
-//     console.error(error)
-//   }
-//   }
-//   fetchMyApi()
-// },[])
 
 
 
@@ -62,15 +49,16 @@ function AppBar({post,setPost,fetchPosts}){
   return (
     <>
     <div>
+    <RecoilRoot>
     <Routes>
     <Route path='/' element={<Home />} />
         <Route path='/Signin' element={<Signin />} />
-        <Route path='SignUp' element={<Signup/>}/>
+        <Route path='SignUp' element={<Signup />}/>
         <Route path="/PostBlog" element={<AuthCheck> <Suspense fallback={"loading..."}><PostBlog post={post} setPost={setPost} fetchPosts={fetchPosts}/></Suspense> </AuthCheck>} />
         <Route path='/BlogList' element={<AuthCheck><BlogList post={post} fetchPosts={fetchPosts} /> </AuthCheck>} />
         <Route path='/edit/:id' element={<AuthCheck><Suspense fallback={"loading..."}><EditPost post={post} fetchPosts={fetchPosts} /></Suspense> </AuthCheck>} />
-         
       </Routes>
+      </RecoilRoot>  
       </div>
     </>
   )

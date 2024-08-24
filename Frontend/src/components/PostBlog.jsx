@@ -32,33 +32,42 @@ export default function PostBlog({ setPost, post, fetchPosts }) {
   }
 
   return (
-    
-    <div className="max-w-3xl mx-auto p-6 bg-white  rounded-lg shadow-lg">
-  <h1 className="text-3xl font-bold mb-4">Create a New Blog Post</h1>
-  
-  <input
-    type="text"
-    placeholder="Enter Title of Your Blog"
-    value={title}
-    onChange={(e) => setTitle(e.target.value)}
-    className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-  />
-  
-  <textarea
-    placeholder="Enter the content of your blog"
-    value={blog}
-    onChange={(e) => setBlog(e.target.value)}
-    rows="10"
-    className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-  ></textarea>
-  
-  <button
-    onClick={addBlog}
-    className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200"
-  >
-    Submit
-  </button>
-</div>
+    <div className="min-h-screen bg-gray-100 flex justify-center items-center p-6">
+      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-4xl">
+        <h1 className="text-2xl font-bold mb-6">Submit a Blog Post</h1>
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="title">
+            Blog Title
+          </label>
+          <input
+            type="text"
+            id="title"
+            placeholder="Enter Title of Your Blog"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="w-full p-3 border border-gray-300 rounded-md"
+          />
+        </div>
+        <div className="mb-6">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="blog">
+            Blog Content
+          </label>
+          <textarea
+            id="blog"
+            placeholder="Write your blog here..."
+            value={blog}
+            onChange={(e) => setBlog(e.target.value)}
+            className="w-full p-3 border border-gray-300 rounded-md h-60 resize-none"
+          />
+        </div>
+        <button
+          onClick={addBlog}
+          className="w-full py-3 bg-blue-600 text-white font-bold rounded-md hover:bg-blue-500 transition-colors"
+        >
+          Submit
+        </button>
+      </div>
+    </div>
 
   );
 }
