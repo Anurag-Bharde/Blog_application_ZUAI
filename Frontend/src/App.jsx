@@ -15,20 +15,25 @@ import { AuthCheck } from './components/AuthCheck'
 function App() {
 const [post,setPost]=useState([])
 
+useEffect(() => {
+  fetchPosts()
+}, [])
 
-useEffect(()=>{
-  async function fetchMyApi(){
-      try{
-const response=await axios.get("http://localhost:3000/posts")
-setPost(response.data)
+// useEffect(()=>{
+//   async function fetchMyApi(){
+//       try{
+// const response=await axios.get("http://localhost:3000/posts")
+// setPost(response.data)
 
-  }
-  catch(error){
-    console.error(error)
-  }
-  }
-  fetchMyApi()
-},[])
+//   }
+//   catch(error){
+//     console.error(error)
+//   }
+//   }
+//   fetchMyApi()
+// },[])
+
+
 
 const fetchPosts = async () => {
   try {
@@ -39,12 +44,10 @@ const fetchPosts = async () => {
   }
 }
 
-useEffect(() => {
-  fetchPosts()
-}, [])
+
 
   return (
-    <div >
+    <div className='bg-[#e5ecf3] min-h-screen'>
     <>
     <BrowserRouter>
     <AppBar post={post} setPost={setPost} fetchPosts={fetchPosts} />
@@ -58,12 +61,12 @@ function AppBar({post,setPost,fetchPosts}){
 
   return (
     <>
-    <div >
+    <div>
     <Routes>
     <Route path='/' element={<Home />} />
         <Route path='/Signin' element={<Signin />} />
         <Route path='SignUp' element={<Signup/>}/>
-        <Route path="/PostBlog" element={<AuthCheck> <Suspense fallback={"loading..."}><PostBlog post={post} setPost={setPost} /></Suspense> </AuthCheck>} />
+        <Route path="/PostBlog" element={<AuthCheck> <Suspense fallback={"loading..."}><PostBlog post={post} setPost={setPost} fetchPosts={fetchPosts}/></Suspense> </AuthCheck>} />
         <Route path='/BlogList' element={<AuthCheck><BlogList post={post} fetchPosts={fetchPosts} /> </AuthCheck>} />
         <Route path='/edit/:id' element={<AuthCheck><Suspense fallback={"loading..."}><EditPost post={post} fetchPosts={fetchPosts} /></Suspense> </AuthCheck>} />
          

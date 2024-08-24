@@ -40,9 +40,13 @@ export function BlogList({ post, fetchPosts }) {
     setShowModal(true)
   }
 
-  async function LogoutFunc(){
-     await axios.post("http://localhost:3000/logout")
-     navigate("/Signin")
+  async function LogoutFunc() {
+    try {
+      await axios.post("http://localhost:3000/logout");
+      navigate("/Signin");
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
   }
 
   function handleBlogClick(index) {
@@ -92,7 +96,6 @@ export function BlogList({ post, fetchPosts }) {
       {/* Navigation Bar */}
       <nav className="bg-gray-100 p-4 border-2 rounded-full mb-2 transition-all duration-200 ease-out hover:shadow-[0_0_6px_#23adff]">
      <div className="container mx-auto flex justify-between items-center">
-            
             <h4>Hello {username}</h4>
             <button
               className="rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
@@ -126,13 +129,13 @@ export function BlogList({ post, fetchPosts }) {
                 </p>
                 <div className="flex justify-end col-start-4 space-x-2">
                   <button
-                  className="border-2 border-slate-300 px-2 py-1 rounded-md hover:bg-gray-300"
-                  onClick={() => navigate(`/edit/${list._id}`)}
+                    className="border-2 px-2 py-1 rounded-md hover:bg-gray-300"
+                    onClick={() => navigate(`/edit/${list._id}`)}
                   >
                     Edit
                   </button>
                   <button
-                    className="border-2 border-slate-300 px-2 py-1 rounded-md hover:bg-gray-300"
+                    className="border-2 px-2 py-1 rounded-md hover:bg-gray-300"
                     onClick={() => handleDeleteClick(list._id)}
                   
                     >
@@ -143,7 +146,7 @@ export function BlogList({ post, fetchPosts }) {
 
               <article>
                 <button
-                  className="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-600 hover:text-slate-600 hover:underline"
+                  className="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-600 hover:underline"
                   onClick={() => handleBlogClick(index)}
                 >
                   {list.Title}
