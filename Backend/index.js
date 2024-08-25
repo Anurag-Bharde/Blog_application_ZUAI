@@ -15,15 +15,16 @@ app.use(cookieParser());
 app.use(express.json())
 
 app.use(
-    cors({
-      credentials: true,
-      origin: "http://localhost:5173",
-    })
-  );
+  cors({
+    credentials: true,
+    origin: "http://localhost:5173",
+  })
+);
 
 
   app.post("/signin",async (req, res) => {
-    const { username, password } = req.body;
+    try{
+      const { username, password } = req.body;
     const USeRFINDER=await UserSchema.findOne({username:username,password:password})
     if(!USeRFINDER){
         return res.status(411).json({msg:"Enter the credentials correctly"})
@@ -33,6 +34,18 @@ app.use(
     const token = jwt.sign({ id:iddd }, JWT_SECRET, { expiresIn: "1h" });
     res.cookie("token", token, { httpOnly: true, secure: true });
     return res.send("Logged in!" + token);
+    }
+    catch(error){
+      console.log(error);
+        if (error.name === 'ValidationError') {
+          // Extract the specific validation error message
+          const errorMessage = Object.values(error.errors).map(err => err.message).join(', ');
+          return res.status(400).json({ msg: errorMessage });
+      }
+      else{
+        res.status(500).json({ msg: "Internal Server Error while Signin" });
+      }
+    }
   });
   
   app.post("/signup",async(req,res)=>{
@@ -51,16 +64,18 @@ app.use(
         })
       const userIDd=dbUser._id.toString()
         const token = jwt.sign({id:userIDd}, JWT_SECRET, { expiresIn: 60*60 });
-        res.cookie("token", token, { httpOnly: true, secure: true });
+        res.cookie("token", token, { httpOnly: true, secure: true, sameSite: 'none' });
     }
     catch(error){
-        if (error.name === 'ValidationError') {
-            const field = Object.keys(error.errors)[0];
-            const message = error.errors[field].message;
-            return res.status(402).json({message})
-        }  
-        
-        return res.status(500).json({msg:"error occured"})        
+    console.log(error)
+      if (error.name === 'ValidationError') {
+        // Extract the specific validation error message
+        const errorMessage = Object.values(error.errors).map(err => err.message).join(', ');
+        return res.status(400).json({ msg: errorMessage });
+    }
+    else{
+      res.status(500).json({ msg: "Internal Server Error while SignUp" });
+    }       
     }
     return res.status(200).json({msg:"The user data is saved"})
 })
@@ -68,6 +83,7 @@ app.use(
 
 app.get("/user", (req, res) => {
     const token = req.cookies.token;
+
     if (!token) {
       return res.status(401).json({ message: "Unauthorized: No token provided" });
     }
@@ -78,6 +94,7 @@ app.get("/user", (req, res) => {
       res.json({ userId: decoded.id });
   
     } catch (err) {
+      console.log(err)
       return res.status(401).json({ message: "Unauthorized: Invalid token" });
     }
   });
@@ -171,6 +188,11 @@ app.post('/posts', authenticateToken, async (req, res) => {
         res.status(201).json(posting);
     } catch (error) {
         console.log(error);
+        if (error.name === 'ValidationError') {
+          // Extract the specific validation error message
+          const errorMessage = Object.values(error.errors).map(err => err.message).join(', ');
+          return res.status(400).json({ msg: errorMessage });
+      }
         res.status(500).json({ msg: "Internal Server Error while posting the Blog" });
     }
 });
@@ -196,6 +218,7 @@ app.put('/posts/:id',async(req,res)=>{
  catch(err){
 
 console.log(err);
+
 res.status(500).json({msg:"Internal Server Error while updating the Blog"})
  }
 })
@@ -254,3 +277,6 @@ app.get('/comments/:postId', async (req, res) => {
 app.listen(port,()=>{
     console.log(`The Sereve is started on http://localhost:3000`)
 })
+
+
+

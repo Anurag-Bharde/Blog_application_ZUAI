@@ -19,6 +19,8 @@ export function BlogList({ post, fetchPosts }) {
   const [currentPostIndex, setCurrentPostIndex] = useState(0);
   const [postToDelete, setPostToDelete] = useState(null);
   const [username, setUsername] = useState(""); // State to hold the username
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredPosts, setFilteredPosts] = useState(post);
   const navigate = useNavigate();
 
   // Get the username from Recoil state when the component mounts or the post changes
@@ -41,10 +43,12 @@ export function BlogList({ post, fetchPosts }) {
     setFilteredPosts(filtered);
   };
 
+  
+
   async function deleter(id) {
     try {
       await axios.delete(`http://localhost:3000/posts/${id}`);
-      await fetchPosts();
+       await fetchPosts();
       setShowModal(false);
     } catch (error) {
       console.error("Error deleting post:", error);
@@ -83,11 +87,13 @@ export function BlogList({ post, fetchPosts }) {
       {/* Side Navigation Bar */}
       <div className="bg-white dark:bg-gray-800 w-16 flex flex-col justify-between items-center py-4 border-r border-gray-300 dark:border-gray-700 sticky top-0 h-screen">
         {/* Logo at the top */}
-        <div className="flex flex-col items-center">
-        <a href="https://github.com/Anurag-Bharde" target="_blank">
-          <img src={image2} alt="dev" className="w-10 h-10 mb-6" />
-          </a>
-        </div>
+        <div className="relative inline-flex h-12 overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50">
+  <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
+  <a href="https://github.com/Anurag-Bharde" target="_blank" className="relative inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full">
+    <img src={image2} alt="dev" className="rounded-full w-10 h-10" />
+  </a>
+</div>
+
 
         {/* Icon buttons at the bottom */}
         <div className="flex flex-col items-center gap-6 mb-6">
@@ -139,7 +145,7 @@ export function BlogList({ post, fetchPosts }) {
             </form>
             <div className="flex items-center gap-4">
 
-            <h4>Hello {username}</h4>
+            <h4 className="font-sans">Hello {username}</h4>
             <button
               className="rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               onClick={() => LogoutFunc()}

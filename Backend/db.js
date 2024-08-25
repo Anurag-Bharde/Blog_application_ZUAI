@@ -7,13 +7,13 @@ const BlogPost=new mongoose.Schema({
     Title:{
         type:String,
         required:true,
-        minLength:3,
+        minLength:5,
         trim:true
     },
     Post:{
        type:String,
         required:true,
-        minLength:3,
+        minLength:1,
         trim:true
     },
     TimePost:Date,
