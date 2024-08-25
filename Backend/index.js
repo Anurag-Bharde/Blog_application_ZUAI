@@ -6,7 +6,9 @@ const jwt = require("jsonwebtoken");
 const path = require("path");
 const { UserSchema } = require("./db");
 const {BlogPostSchema}=require("./db");
+const {CommentModel}=require("./db");
 
+const port= process.env.PORT ||3000
 
 const JWT_SECRET = "test123";
 app.use(cookieParser());
@@ -62,6 +64,7 @@ app.use(
     }
     return res.status(200).json({msg:"The user data is saved"})
 })
+
 
 app.get("/user", (req, res) => {
     const token = req.cookies.token;
@@ -140,7 +143,6 @@ try{const id=req.params.id;
 const post=await BlogPostSchema.findById(id);
 res.json(post)}
 catch(err){
-    console.log("bb")
     console.log(err);
     res.status(500).json({msg:"Server Error :/getById"})
 
@@ -221,6 +223,34 @@ res.status(500).json({msg:"Internal Server Error while deleting the Blog"})
 
 })
 
-app.listen(3000,()=>{
+app.get('/comments/:postId', async (req, res) => {
+    try {
+      const comments = await CommentModel.find({ post: req.params.postId })
+        .populate('user', 'username')
+        .sort({ createdAt: -1 });
+      res.json(comments);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Error fetching comments" });
+    }
+  });
+
+  app.post('/comments', authenticateToken, async (req, res) => {
+    try {
+      const { postId, content } = req.body;
+      const comment = new CommentModel({
+        content,
+        user: req.userId,
+        post: postId
+      });
+      await comment.save();
+      res.status(201).json(comment);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Error adding comment" });
+    }
+  });
+
+app.listen(port,()=>{
     console.log(`The Sereve is started on http://localhost:3000`)
 })
