@@ -4,20 +4,25 @@ const app=express();
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
 const path = require("path");
+require("dotenv").config();
+
+const JwtSecret=process.env.JWT_SECRET
+const PORT= process.env.PORT || 3000
+const FRONTEND=process.env.CORS_ORIGIN
+
+const JWT_SECRET = JwtSecret;
+app.use(cookieParser());
+app.use(express.json())
+
 const { UserSchema } = require("./db");
 const {BlogPostSchema}=require("./db");
 const {CommentModel}=require("./db");
 
-const port= process.env.PORT ||3000
-
-const JWT_SECRET = "test123";
-app.use(cookieParser());
-app.use(express.json())
-
+// console.log(process.env.FRONTEND)
 app.use(
   cors({
     credentials: true,
-    origin: "http://localhost:5173",
+    origin: FRONTEND,
   })
 );
 
@@ -274,9 +279,8 @@ app.get('/comments/:postId', async (req, res) => {
     }
   });
 
-app.listen(port,()=>{
+app.listen(PORT,()=>{
     console.log(`The Sereve is started on http://localhost:3000`)
 })
-
 
 

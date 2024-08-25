@@ -1,7 +1,8 @@
 const mongoose =require("mongoose");
+require("dotenv").config();
+const database_url=process.env.MONGO_URI
 
-
-mongoose.connect("mongodb+srv://anuragadmin:KIkBqYjyBQZXxJ33@cluster0.3sk1xst.mongodb.net/Blog_ZuAi")
+mongoose.connect(database_url)
 
 const BlogPost=new mongoose.Schema({
     Title:{
