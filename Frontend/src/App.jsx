@@ -24,7 +24,7 @@ useEffect(() => {
 
 const fetchPosts = async () => {
   try {
-    const response = await axios.get("http://localhost:3000/posts")
+    const response = await axios.get("https://daily-blogger-c4jx.onrender.com/posts")
     setPost(response.data)
   } catch (error) {
     console.error(error)
@@ -51,9 +51,10 @@ function AppBar({post,setPost,fetchPosts}){
     <div>
     <RecoilRoot>
     <Routes>
-    <Route path='/' element={<Home />} />
-        <Route path='/Signin' element={<Signin />} />
-        <Route path='SignUp' element={<Signup />}/>
+    {/* <Route path='/' element={<Home />} /> */}
+        <Route path='/' element={<Signin />} />
+        <Route path='/signin' element={<Signin />} />
+        <Route path='/SignUp' element={<Signup />}/>
         <Route path="/PostBlog" element={<AuthCheck> <Suspense fallback={"loading..."}><PostBlog post={post} setPost={setPost} fetchPosts={fetchPosts}/></Suspense> </AuthCheck>} />
         <Route path='/BlogList' element={<AuthCheck><BlogList post={post} fetchPosts={fetchPosts} /> </AuthCheck>} />
         <Route path='/edit/:id' element={<AuthCheck><Suspense fallback={"loading..."}><EditPost post={post} fetchPosts={fetchPosts} /></Suspense> </AuthCheck>} />

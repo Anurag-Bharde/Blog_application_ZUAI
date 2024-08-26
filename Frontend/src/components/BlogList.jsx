@@ -18,12 +18,12 @@ export function BlogList({ post, fetchPosts }) {
   const [showBlogModal, setShowBlogModal] = useState(false);
   const [currentPostIndex, setCurrentPostIndex] = useState(0);
   const [postToDelete, setPostToDelete] = useState(null);
-  const [username, setUsername] = useState(""); // State to hold the username
+  const [username, setUsername] = useState(""); 
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredPosts, setFilteredPosts] = useState(post);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Get the username from Recoil state when the component mounts or the post changes
   const usered = useRecoilValue(valuer);
 
   useEffect(() => {
@@ -46,13 +46,19 @@ export function BlogList({ post, fetchPosts }) {
   
 
   async function deleter(id) {
+    setLoading(true); 
     try {
-      await axios.delete(`http://localhost:3000/posts/${id}`);
+      await axios.delete(`https://daily-blogger-c4jx.onrender.com/posts/${id}`);
        await fetchPosts();
-      setShowModal(false);
+     
     } catch (error) {
       console.error("Error deleting post:", error);
     }
+    finally {
+      setLoading(false); 
+      setShowModal(false); 
+    }
+
   }
 
   function handleDeleteClick(id) {
@@ -61,8 +67,8 @@ export function BlogList({ post, fetchPosts }) {
   }
 
   async function LogoutFunc() {
-    await axios.post("http://localhost:3000/logout");
-    navigate("/Signin");
+    await axios.post("https://daily-blogger-c4jx.onrender.com/logout");
+    navigate("/");
   }
 
   function handleBlogClick(index) {
@@ -84,9 +90,9 @@ export function BlogList({ post, fetchPosts }) {
 
   return (
     <div className="bg-[#e5ecf3] min-h-screen flex">
-      {/* Side Navigation Bar */}
+   
       <div className="bg-white dark:bg-gray-800 w-16 flex flex-col justify-between items-center py-4 border-r border-gray-300 dark:border-gray-700 sticky top-0 h-screen">
-        {/* Logo at the top */}
+     
         <div className="relative inline-flex h-12 overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50">
   <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
   <a href="https://github.com/Anurag-Bharde" target="_blank" className="relative inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full">
@@ -95,7 +101,6 @@ export function BlogList({ post, fetchPosts }) {
 </div>
 
 
-        {/* Icon buttons at the bottom */}
         <div className="flex flex-col items-center gap-6 mb-6">
         <a href="https://www.zuai.co/dashboard" target="_blank">
           <button className="p-2 bg-slate-50 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full">
@@ -120,9 +125,8 @@ export function BlogList({ post, fetchPosts }) {
         </div>
       </div>
 
-      {/* Main Content */}
       <div className="flex-1 p-6">
-        {/* Navigation Bar */}
+   
         <nav className="bg-gray-100 p-4 border-2 rounded-full mb-2 transition-all duration-200 ease-out hover:shadow-[0_0_6px_#23adff]">
           <div className="container mx-auto flex justify-between items-center">
             <a href="https://www.zuai.co/" target="_blank">
@@ -156,7 +160,6 @@ export function BlogList({ post, fetchPosts }) {
           </div>
         </nav>
 
-        {/* Post a Blog Button */}
         <div className="flex justify-center mb-8">
           <button
             onClick={() => navigate("/PostBlog")}
@@ -166,7 +169,7 @@ export function BlogList({ post, fetchPosts }) {
           </button>
         </div>
 
-        {/* Blog Cards */}
+
         <div className="grid max-w-2xl grid-cols-1 gap-x-5 gap-y-8 sm:mt-4 lg:mx-0 pl-12 lg:max-w-none lg:grid-cols-2">
           {filteredPosts.map((list, index) => (
             <div
@@ -229,9 +232,11 @@ export function BlogList({ post, fetchPosts }) {
         <Modal
           OnClose={() => setShowModal(false)}
           OnConfirm={() => deleter(postToDelete)}
+          loading={loading}
         >
-          <h2>Delete the Blog</h2>
-          <h6>The deleted blog will not be shown again</h6>
+          <div className="text-center">
+            <p>Are you sure you want to delete this post?</p>
+          </div>
         </Modal>
       )}
 

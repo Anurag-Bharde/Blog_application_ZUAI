@@ -10,7 +10,7 @@ export const AuthCheck = ({ children }) => {
     useEffect(() => {
         const checkAuth = async () => {
             try {
-                const response = await axios.get(`${BACKEND_URL}/user`, {
+                const response = await axios.get(`${BACKEND_URL}user`, {
                     withCredentials: true,
                 });
                 setIsAuthenticated(true);

@@ -10,50 +10,69 @@ const JwtSecret=process.env.JWT_SECRET
 const PORT= process.env.PORT || 3000
 const FRONTEND=process.env.CORS_ORIGIN
 
+const allowedOrigins = [
+  "https://daily-bloggers.onrender.com",
+  "https://daily-bloggers.onrender.com/"
+];
 const JWT_SECRET = JwtSecret;
 app.use(cookieParser());
 app.use(express.json())
+
+app.use(
+  cors({
+    credentials: true,
+    origin: (origin, callback) => {
+      if (allowedOrigins.includes(origin) || !origin) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    }
+  })
+);
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "https://daily-bloggers.onrender.com");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 
 const { UserSchema } = require("./db");
 const {BlogPostSchema}=require("./db");
 const {CommentModel}=require("./db");
 
 // console.log(process.env.FRONTEND)
-app.use(
-  cors({
-    credentials: true,
-    origin: FRONTEND,
+
+
+
+  app.post("/signin",async (req, res) => {
+    try{
+      const { username, password } = req.body;
+    const USeRFINDER=await UserSchema.findOne({username:username,password:password})
+    if(!USeRFINDER){
+        return res.status(411).json({msg:"Enter the credentials correctly"})
+     }
+     const iddd=USeRFINDER._id;
+
+    const token = jwt.sign({ id:iddd }, JWT_SECRET, { expiresIn: "1h" });
+    res.cookie("token", token, { httpOnly: true, secure: true, sameSite: 'none'  });
+    return res.send("Logged in!" + token);
+    }
+    catch(error){
+      console.log(error);
+        if (error.name === 'ValidationError') {
+          // Extract the specific validation error message
+          const errorMessage = Object.values(error.errors).map(err => err.message).join(', ');
+          return res.status(400).json({ msg: errorMessage });
+      }
+      else{
+        res.status(500).json({ msg: "Internal Server Error while Signin" });
+      }
+    }
+  });
+
+  app.get("/",(req,res)=>{
+    res.send("<h1>check</h1>")
   })
-);
-
-
-
-
-app.post("/signin",async (req, res) => {
-  try{
-    const { username, password } = req.body;
-  const USeRFINDER=await UserSchema.findOne({username:username,password:password})
-  if(!USeRFINDER){
-      return res.status(411).json({msg:"Enter the credentials correctly"})
-   }
-   const iddd=USeRFINDER._id;
-
-  const token = jwt.sign({ id:iddd }, JWT_SECRET, { expiresIn: "1h" });
-  res.cookie("token", token, { httpOnly: true, secure: true, sameSite: 'lax'  });
-  return res.send("Logged in!" + token);
-  }
-  catch(error){
-    console.log(error);
-      if (error.name === 'ValidationError') {
-        // Extract the specific validation error message
-        const errorMessage = Object.values(error.errors).map(err => err.message).join(', ');
-        return res.status(400).json({ msg: errorMessage });
-    }
-    else{
-      res.status(500).json({ msg: "Internal Server Error while Signin" });
-    }
-  }
-});
   
   app.post("/signup",async(req,res)=>{
     const {username,password,firstName,lastName,profession}=req.body;
@@ -89,22 +108,22 @@ app.post("/signin",async (req, res) => {
 
 
 app.get("/user", (req, res) => {
-  const token = req.cookies.token;
+    const token = req.cookies.token;
 
-  if (!token) {
-    return res.status(401).json({ message: "Unauthorized: No token provided" });
-  }
-
-  try {
-    const decoded = jwt.verify(token, JWT_SECRET);
-    // Fetch user email or other details from the database using decoded.id
-    res.json({ userId: decoded.id });
-
-  } catch (err) {
-    console.log(err)
-    return res.status(401).json({ message: "Unauthorized: Invalid token" });
-  }
-});
+    if (!token) {
+      return res.status(401).json({ message: "Unauthorized: No token provided" });
+    }
+  
+    try {
+      const decoded = jwt.verify(token, JWT_SECRET);
+      // Fetch user email or other details from the database using decoded.id
+      res.json({ userId: decoded.id });
+  
+    } catch (err) {
+      console.log(err)
+      return res.status(401).json({ message: "Unauthorized: Invalid token" });
+    }
+  });
   
   app.post("/logout", (req, res) => {
     res.clearCookie("token");

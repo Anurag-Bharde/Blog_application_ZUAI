@@ -12,7 +12,7 @@ export default function BlogModal({ post, onClose, onPrev, onNext }) {
 
   const fetchComments = async () => {
     try {
-      const response = await axios.get(`http://localhost:3000/comments/${post._id}`);
+      const response = await axios.get(`https://daily-blogger-c4jx.onrender.com/comments/${post._id}`);
       setComments(response.data);
     } catch (error) {
       console.error("Error fetching comments:", error);
@@ -22,7 +22,7 @@ export default function BlogModal({ post, onClose, onPrev, onNext }) {
   const handleSubmitComment = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:3000/comments", {
+      await axios.post("https://daily-blogger-c4jx.onrender.com/comments", {
         postId: post._id,
         content: comment
       }, { withCredentials: true });
@@ -55,7 +55,6 @@ export default function BlogModal({ post, onClose, onPrev, onNext }) {
           <button onClick={onNext} className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 transition duration-200">Next &rarr;</button>
         </div>
 
-        {/* Comment Section */}
         <div className="mt-6">
           <h3 className="text-xl font-semibold mb-4">Comments</h3>
           <form onSubmit={handleSubmitComment} className="mb-4">

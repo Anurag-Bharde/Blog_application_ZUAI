@@ -15,7 +15,7 @@ This document provides a comprehensive guide to the full-stack blog application,
 #### 1. User Authentication
 - **Signup and Login**: Users can sign up and log in to the application. The signup form includes fields for username, email, and password. Authentication is handled securely, ensuring only registered users can log in.
 - **Session Management**: The application uses session cookies to maintain user login status, ensuring that users remain authenticated across different pages until they log out.
-
+0
 #### 2. Blog Post Management
 - **Create Posts**: Authenticated users can create new blog posts. The post creation form includes fields for the blog title and content. Posts are stored in the database and displayed in the blog list.
 - **View Posts**: Users can view a list of all blog posts. Each post displays the title, content, author name, and profession, along with a timestamp indicating when the post was created.

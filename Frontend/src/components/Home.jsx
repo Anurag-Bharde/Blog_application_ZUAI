@@ -5,11 +5,11 @@ function Home() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Navigate to /signin when the component mounts
+    
     navigate("/Signin");
   }, [navigate]);
 
-  return null; // Or a loading spinner, or any other content
+  return null; 
 }
 
 export default Home;

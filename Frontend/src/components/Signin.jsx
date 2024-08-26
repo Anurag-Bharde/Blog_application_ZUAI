@@ -14,10 +14,10 @@ function Signin() {
     const navigate=useNavigate()
   return (
     <div className="flex h-screen">
-      {/* Image Section */}
+      
       <div className="w-2/6 h-full relative">
       <img src={image} alt="Signup" className="absolute inset-0 w-full h-full object-cover object-bottom"></img>
-        {/* Optionally, you can add some overlay or text here */}
+        
       </div>
     <div className="w-4/6 flex items-center justify-center min-h-screen bg-[#e5ecf3]">
     <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
@@ -52,7 +52,7 @@ function Signin() {
           type="button"
           onClick={async () => {
             try {
-              await axios.post(`${BACKEND_URL}/signin`, {
+              await axios.post(`${BACKEND_URL}signin`, {
                 username,
                 password,
               }, {
@@ -60,7 +60,7 @@ function Signin() {
               });
                setUsered(username);
               alert("You are logged in");
-              navigate("/BlogList");
+              navigate("BlogList");
             } catch (error) {
               console.error("Sign in error:", error);
               alert("Sign in failed");
