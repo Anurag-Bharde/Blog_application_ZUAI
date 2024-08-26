@@ -26,53 +26,34 @@ app.use(
   })
 );
 
-app.use((req, res, next) => {
-  res.setHeader(
-    "Access-Control-Allow-Origin",
-    "https://your-frontend.com"
-  );
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS,CONNECT,TRACE"
-  );
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "Content-Type, Authorization, X-Content-Type-Options, Accept, X-Requested-With, Origin, Access-Control-Request-Method, Access-Control-Request-Headers"
-  );
-  res.setHeader("Access-Control-Allow-Credentials", true);
-  res.setHeader("Access-Control-Allow-Private-Network", true);
-  //  Firefox caps this at 24 hours (86400 seconds). Chromium (starting in v76) caps at 2 hours (7200 seconds). The default value is 5 seconds.
-  res.setHeader("Access-Control-Max-Age", 7200);
 
-  next();
+
+
+app.post("/signin",async (req, res) => {
+  try{
+    const { username, password } = req.body;
+  const USeRFINDER=await UserSchema.findOne({username:username,password:password})
+  if(!USeRFINDER){
+      return res.status(411).json({msg:"Enter the credentials correctly"})
+   }
+   const iddd=USeRFINDER._id;
+
+  const token = jwt.sign({ id:iddd }, JWT_SECRET, { expiresIn: "1h" });
+  res.cookie("token", token, { httpOnly: true, secure: true, sameSite: 'lax'  });
+  return res.send("Logged in!" + token);
+  }
+  catch(error){
+    console.log(error);
+      if (error.name === 'ValidationError') {
+        // Extract the specific validation error message
+        const errorMessage = Object.values(error.errors).map(err => err.message).join(', ');
+        return res.status(400).json({ msg: errorMessage });
+    }
+    else{
+      res.status(500).json({ msg: "Internal Server Error while Signin" });
+    }
+  }
 });
-
-
-  app.post("/signin",async (req, res) => {
-    try{
-      const { username, password } = req.body;
-    const USeRFINDER=await UserSchema.findOne({username:username,password:password})
-    if(!USeRFINDER){
-        return res.status(411).json({msg:"Enter the credentials correctly"})
-     }
-     const iddd=USeRFINDER._id;
-
-    const token = jwt.sign({ id:iddd }, JWT_SECRET, { expiresIn: "1h" });
-    res.cookie("token", token, { httpOnly: true, secure: true });
-    return res.send("Logged in!" + token);
-    }
-    catch(error){
-      console.log(error);
-        if (error.name === 'ValidationError') {
-          // Extract the specific validation error message
-          const errorMessage = Object.values(error.errors).map(err => err.message).join(', ');
-          return res.status(400).json({ msg: errorMessage });
-      }
-      else{
-        res.status(500).json({ msg: "Internal Server Error while Signin" });
-      }
-    }
-  });
   
   app.post("/signup",async(req,res)=>{
     const {username,password,firstName,lastName,profession}=req.body;
@@ -108,22 +89,22 @@ app.use((req, res, next) => {
 
 
 app.get("/user", (req, res) => {
-    const token = req.cookies.token;
+  const token = req.cookies.token;
 
-    if (!token) {
-      return res.status(401).json({ message: "Unauthorized: No token provided" });
-    }
-  
-    try {
-      const decoded = jwt.verify(token, JWT_SECRET);
-      // Fetch user email or other details from the database using decoded.id
-      res.json({ userId: decoded.id });
-  
-    } catch (err) {
-      console.log(err)
-      return res.status(401).json({ message: "Unauthorized: Invalid token" });
-    }
-  });
+  if (!token) {
+    return res.status(401).json({ message: "Unauthorized: No token provided" });
+  }
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    // Fetch user email or other details from the database using decoded.id
+    res.json({ userId: decoded.id });
+
+  } catch (err) {
+    console.log(err)
+    return res.status(401).json({ message: "Unauthorized: Invalid token" });
+  }
+});
   
   app.post("/logout", (req, res) => {
     res.clearCookie("token");
